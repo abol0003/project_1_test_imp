@@ -2,8 +2,9 @@ import numpy as np
 from helpers import *
 
 def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
+    "hey"
     ws = [initial_w]
-    losses = []
+    loss = compute_loss(y, tx, w)
     w = initial_w
     for n_iter in range(max_iters):
         grad=compute_gradient(y,tx,w)
@@ -11,7 +12,7 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
         w=ws[n_iter]-gamma*grad
         # store w and loss
         ws.append(w)
-        losses.append(loss)
+        #losses.append(loss)
         print(
             "GD iter. {bi}/{ti}: loss={l}, w0={w0}, w1={w1}".format(
                 bi=n_iter, ti=max_iters - 1, l=loss, w0=w[0], w1=w[1]
@@ -20,9 +21,10 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     return w, loss
 
 def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
+    "hey"
     w = initial_w
     ws = [w]
-    losses = []
+    loss = compute_loss(y, tx, w)
 
 
     for n_iter in range(max_iters):
@@ -34,7 +36,7 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
         w = w - gamma * grad
 
         loss = compute_loss(y, tx, w)
-        losses.append(loss)
+        #losses.append(loss)
         ws.append(w)
 
         print(
@@ -47,6 +49,7 @@ def mean_squared_error_sgd(y, tx, initial_w, max_iters, gamma):
 
 
 def least_squares(y, tx):
+    "hey"
     a = tx.T.dot(tx)
     b = tx.T.dot(y)
     w = np.linalg.solve(a, b) # w=a^-1 x b
@@ -54,6 +57,7 @@ def least_squares(y, tx):
     return w, loss
 
 def ridge_regression(y, tx, lambda_):
+    "hey"
     N, D = tx.shape
     A = tx.T.dot(tx) + 2 * N * lambda_ * np.identity(D)
     b = tx.T.dot(y)
@@ -62,12 +66,14 @@ def ridge_regression(y, tx, lambda_):
     return w, loss
 
 def logistic_regression(y, tx, initial_w, max_iters, gamma):
+    "hey"
     w = initial_w
     for _ in range(max_iters):
         w -= gamma * logistic_gradient(y, tx, w)
     return w, logistic_loss(y, tx, w)
 
 def reg_logistic_regression(y, tx, lambda_, initial_w, max_iters, gamma):
+    "hey"
     w = initial_w
     for _ in range(max_iters):
         w -= gamma * logistic_gradient(y, tx, w, lambda_=lambda_)
@@ -98,7 +104,7 @@ def compute_loss(y, tx, w):
     err=y-tx.dot(w)
     return 0.5*np.mean(err**2) #np.mean(np.abs(err)) for MAE
 
-def compute_gradient(y, tx, w):
+def compute_gradient(y, tx, w, sgd=False):
     """Computes the gradient at w.
 
     Args:
