@@ -185,7 +185,7 @@ def reg_logistic_regression(
             grad = tx_b.T.dot(resid) / y_b.size
         # add L2 penalty (on all weights; bias included)
         g_reg = grad.copy()
-        g_reg += 2.0 * lambda_ * w
+        g_reg[1:] += 2.0 * lambda_ * w[1:]
 
         if adam:
             m = b1 * m + (1 - b1) * g_reg
