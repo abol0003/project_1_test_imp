@@ -52,7 +52,7 @@ CONT = [0, 1, 2, 4, 6]    # continuous feature indices
 
 #====================================================
 # Optimizer / Scheduler knobs (tuning + final training)
-USE_ADAM_DEFAULT   = True
+USE_ADAM_DEFAULT   = False
 SCHEDULE_DEFAULT   = "None"  # one of: "none", "cosine", "exponential"
 EARLY_STOP_DEFAULT = False
 PATIENCE_DEFAULT   = 15
@@ -68,4 +68,5 @@ ADD_POLY_FEATURES        = True
 POLY_ADD_SQUARES         = True
 POLY_ADD_INTERACTIONS    = True
 POLY_MAX_ADDED_FEATURES  = 800
+
 POLY_CONT_MAX_UNIQUE     = 32
