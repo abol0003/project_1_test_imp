@@ -87,7 +87,7 @@ EARLY_STOP_DEFAULT = True
 PATIENCE_DEFAULT = 15
 TOL_DEFAULT = 1e-8
 
-USE_WEIGHTED_BCE = True
+USE_WEIGHTED_BCE = False
 
 SCHEDULE_CHOICES = ["exponential, cosine"]  # cosine, exponential, none
 ADAM_CHOICES = [True]  # can just be better as it just make converge faster
@@ -98,3 +98,4 @@ ADAM_CHOICES = [True]  # can just be better as it just make converge faster
 # =========================================================
 FINAL_MAX_ITERS = 400
 CV_KFOLD_PREDICTION = False
+
