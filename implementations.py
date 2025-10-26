@@ -219,8 +219,7 @@ def reg_logistic_regression(
 
     for t in range(1, max_iters + 1):
         lr = schedule(gamma, t - 1, max_iters) if schedule else gamma
-        grad = logistic_gradient(y, tx, w, lambda_=0)
-        g_reg = grad + 2.0 * lambda_ * w
+        g_reg = logistic_gradient(y, tx, w, lambda_)
 
         if adam:
             m = b1 * m + (1 - b1) * g_reg
