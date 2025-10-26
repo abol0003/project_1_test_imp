@@ -2,8 +2,6 @@ import pathlib
 
 import numpy as np
 import pytest
-import implementations 
-from implementations import *
 from conftest import ATOL, GITHUB_LINK, RTOL
 
 FUNCTIONS = [
