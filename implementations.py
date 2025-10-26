@@ -7,8 +7,9 @@ EARLY_STOP_META = {"triggered": False, "iter": None, "best_loss": None, "monitor
 
 
 # =========================================================
-# 1) SIX CORE FUNCTIONS 
+# 1) SIX CORE FUNCTIONS
 # =========================================================
+
 
 def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     """
@@ -215,7 +216,12 @@ def reg_logistic_regression(
 
     monitor_kind = "val" if y_val is not None else "train"
     global EARLY_STOP_META
-    EARLY_STOP_META = {"triggered": False, "iter": None, "best_loss": None, "monitor": monitor_kind}
+    EARLY_STOP_META = {
+        "triggered": False,
+        "iter": None,
+        "best_loss": None,
+        "monitor": monitor_kind,
+    }
 
     for t in range(1, max_iters + 1):
         lr = schedule(gamma, t - 1, max_iters) if schedule else gamma
@@ -232,7 +238,9 @@ def reg_logistic_regression(
 
         cur_train_loss = logistic_loss(y, tx, w, lambda_=0)
         cur_monitor_loss = (
-            logistic_loss(y_val, X_val, w, lambda_=0) if y_val is not None else cur_train_loss
+            logistic_loss(y_val, X_val, w, lambda_=0)
+            if y_val is not None
+            else cur_train_loss
         )
 
         if callback:
@@ -273,22 +281,28 @@ def reg_logistic_regression(
 
     final_loss = logistic_loss(y, tx, w, lambda_=0)
     if early_stopping and EARLY_STOP_META["iter"] is None:
-        last_monitor = logistic_loss(y_val, X_val, w, lambda_=0) if y_val is not None else final_loss
+        last_monitor = (
+            logistic_loss(y_val, X_val, w, lambda_=0)
+            if y_val is not None
+            else final_loss
+        )
         EARLY_STOP_META.update(
             {
                 "triggered": False,
                 "iter": int(best_iter if best_iter > 0 else t),
-                "best_loss": float(best_loss if np.isfinite(best_loss) else last_monitor),
+                "best_loss": float(
+                    best_loss if np.isfinite(best_loss) else last_monitor
+                ),
                 "monitor": monitor_kind,
             }
         )
     return w, final_loss
 
 
-
 # =========================================================
 # 2) ADDITIONAL FUNCTIONS
 # =========================================================
+
 
 def sigmoid(z):
     """
@@ -369,7 +383,6 @@ def logistic_gradient(y, tx, w, lambda_=0):
     return grad
 
 
-
 def compute_loss(y, tx, w):
     """
     Mean squared error (MSE) objective for linear regression.
@@ -417,6 +430,7 @@ def compute_gradient(y, tx, w, sgd=False):
 # 3) NAG-FREE SECTION
 # =========================================================
 
+
 def reg_logistic_regression_nagfree(
     y,
     tx,
@@ -453,10 +467,11 @@ def reg_logistic_regression_nagfree(
             w: array-like, shape (D,). Final parameters from NAG-Free.
             loss: float. Unpenalized logistic loss on (y, tx, w).
     """
-    from extensions import nagfree  
+    from extensions import nagfree
 
     w0 = np.asarray(initial_w, dtype=np.float32, copy=True)
     print(f"y size : {y.size}, tx shape: {tx.shape}, w0 shape: {w0.shape}")
+
     # L2-penalized gradient (same convention as reg_logistic_regression)
     def grad_fn(w):
         p = sigmoid(tx.dot(w))
@@ -464,14 +479,15 @@ def reg_logistic_regression_nagfree(
         grad += 2.0 * lambda_ * w
         return grad
 
-
     # NAG-Free call (handles its own step-size and curvature)
     w_final = nagfree(
         x0=w0,
         g=grad_fn,
         maxit=int(max_iters),
         tol=float(tol),
-        L_max=float(L_max if L_max is not None else getattr(config, "NAGFREE_L_MAX", 1e8)),
+        L_max=float(
+            L_max if L_max is not None else getattr(config, "NAGFREE_L_MAX", 1e8)
+        ),
         track_history=False,
     )
 

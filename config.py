@@ -98,4 +98,3 @@ ADAM_CHOICES = [True]  # can just be better as it just make converge faster
 # =========================================================
 FINAL_MAX_ITERS = 400
 CV_KFOLD_PREDICTION = False
-
